@@ -1,6 +1,7 @@
 local Path = require("plenary.path")
 local Scan = require("plenary.scandir")
 local Jinja = require("dbt-nvim.jinja")
+local TelescopeBuiltIn = require("telescope.builtin")
 
 M = {}
 local function get_dbt_root_dir()
@@ -48,15 +49,24 @@ local function go_to_definition()
     end
 end
 
+local function telescope_jump_to_model_file(models_dir)
+    TelescopeBuiltIn.find_files(
+        {
+            cwd = models_dir,
+            prompt_title = "DBT Models",
+            file_ignore_patterns = {".yml$", ".yaml$", ".md$"},
+        }
+    )
+end
+
 local function test_harness()
     root_dir = get_dbt_root_dir()
     models_dir = root_dir .. "/models"
-    leaf_model_dirs = get_leaf_model_dirs(models_dir)
-    go_to_definition()
+    telescope_jump_to_model_file(models_dir)
 end
 
--- return {test_harness = test_harness}
 M.test_harness = test_harness
 M.go_to_definition = go_to_definition
+M.telescope_jump_to_model_file = telescope_jump_to_model_file
 
 return M
