@@ -50,7 +50,10 @@ local function go_to_definition()
     end
 end
 
-local function telescope_jump_to_model_file(models_dir)
+local function telescope_jump_to_model_file()
+
+    local root_dir = get_dbt_root_dir()
+    local models_dir = root_dir .. "/models"
     TelescopeBuiltIn.find_files(
         {
             cwd = models_dir,
