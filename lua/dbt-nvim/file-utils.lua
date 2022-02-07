@@ -1,6 +1,7 @@
 local Path = require("plenary.path")
 local Scan = require("plenary.scandir")
 local Jinja = require("dbt-nvim.jinja")
+local Yaml = require("dbt-nvim.yaml")
 local TelescopeBuiltIn = require("telescope.builtin")
 
 M = {}
@@ -60,9 +61,7 @@ local function telescope_jump_to_model_file(models_dir)
 end
 
 local function test_harness()
-    root_dir = get_dbt_root_dir()
-    models_dir = root_dir .. "/models"
-    telescope_jump_to_model_file(models_dir)
+
 end
 
 M.test_harness = test_harness

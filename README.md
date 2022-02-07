@@ -5,12 +5,17 @@ Requires [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim), [tel
 
 ## Features
 - [X] jump to model file from `{{ ref() }}`
-- [ ] jump to source definition (in yaml).
 - [X] select model file to jump to from Telescope fuzzy finder
+- [ ] jump to model properties in `.yml` file
+    - [ ] use treesitter to parse model names and line numbers from `.yaml` file
+    - [ ] crawl all .yml files looking for model name
+- [ ] jump to source definition (in yaml).
+    - [ ] use treesitter to parse source table names and line numbers from `.yaml` file
+    - [ ] crawl all .yml files looking for source table name
+    - [ ] update `DBTGoToDefinition` to jump to source `.yml` if `{{ source() }}` specified
 - [ ] insert model ref from Telescope fuzzy finder
 - [ ] view model columns and definitions in floating window
 - [ ] view source columns and definitions in floating window
-- [ ] jump to model properties in `.yml` file
 - [ ] run model from model file
 - [ ] run tests for model from model file
 - [ ] make vim help for plugin
