@@ -63,12 +63,33 @@ local function telescope_jump_to_model_file()
     )
 end
 
-local function test_harness()
+local function get_model_names(root_dir)
+    local root_dir = root_dir or get_dbt_root_dir()
+    local model_dir_path = root_dir .. "/models"
+    local model_paths = Scan.scan_dir(model_dir_path,
+        {
+            hidden = false,
+            only_dirs = false,
+            add_dirs = false,
+            search_pattern = "%.sql$"
+        }
+    )
+    model_names = {}
+    for i, v in pairs(model_paths) do
+        parts = vim.split(v, "/", true)
+        name = vim.split(parts[#parts], ".", true)[1]
+        table.insert(model_names, name)
+    end
+    return model_names
+end
 
+local function test_harness()
+    put(get_model_names())
 end
 
 M.test_harness = test_harness
 M.go_to_definition = go_to_definition
 M.telescope_jump_to_model_file = telescope_jump_to_model_file
+M.get_model_names = get_model_names
 
 return M
