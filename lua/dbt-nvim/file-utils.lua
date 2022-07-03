@@ -3,6 +3,7 @@ local Scan = require("plenary.scandir")
 local Jinja = require("dbt-nvim.jinja")
 local Yaml = require("dbt-nvim.yaml")
 local TelescopeBuiltIn = require("telescope.builtin")
+local notify = require("notify").notify
 
 M = {}
 local function get_dbt_root_dir()
@@ -83,13 +84,50 @@ local function get_model_names(root_dir)
     return model_names
 end
 
+local function get_current_model_name()
+    local file_name = vim.api.nvim_eval('expand("%:t")')
+    local table_name = vim.split(file_name, ".", true)[1]
+    local schema_name = ""
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+    for _, v in pairs(lines) do
+        local maybe_schema = Jinja.get_schema(v)
+        if maybe_schema then
+            schema_name = maybe_schema
+        end
+    end
+    local full_name = ""
+    if schema_name ~= "" then
+        full_name = schema_name .. "." .. table_name
+    else
+        full_name = table_name
+    end
+    return full_name
+end
+
+local function yank_current_model_name_to_clipboard(options)
+    local full_name = get_current_model_name()
+    if options["lowercase"] then
+        full_name = string.lower(full_name)
+    end
+    if options["prefix"] ~= nil then
+        full_name = options["prefix"] .. full_name
+    end
+    vim.fn.setreg("+", full_name)
+    notify("Yanking model name " .. full_name, "info", {title = "Get DBT model", timeout = 1000})
+end
+
 local function test_harness()
-    put(get_model_names())
+    put(yank_current_model_name_to_clipboard({
+        lowercase=true,
+        prefix="cmeyers_"
+    }))
 end
 
 M.test_harness = test_harness
 M.go_to_definition = go_to_definition
 M.telescope_jump_to_model_file = telescope_jump_to_model_file
 M.get_model_names = get_model_names
+M.get_current_model_name = get_current_model_name
+M.yank_current_model_name_to_clipboard = yank_current_model_name_to_clipboard
 
 return M
