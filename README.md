@@ -47,8 +47,16 @@ Suggested remap in `nvim/after/ftplugin/sql`:
 
 ```vim
 nnoremap <buffer> gd :DBTGoToDefinition<CR>
-inoremap <buffer> rrr <C-O>:DBTInsertModelRef<CR>
 ```
 
 ### `DBTTelescopeJumpToModelFile`
 Open a the Telescope fuzzy file picker to select model file to jump to.
+
+
+### `DBTInsertModelRef`
+Select a model name from a fuzzy finder and insert it into a Jinja `{{ ref('') }}` tag.
+
+Suggested remap in `nvim/after/ftplugin/sql`:
+```vim
+inoremap <buffer> rrr <C-O>:DBTInsertModelRef<CR>
+```
