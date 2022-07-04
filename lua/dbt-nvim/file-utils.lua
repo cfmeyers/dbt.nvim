@@ -84,6 +84,29 @@ local function get_model_names(root_dir)
     return model_names
 end
 
+local function insert_text_at_current_position(text)
+    text = text .. " "
+    local row_num = vim.api.nvim_win_get_cursor(0)[1]
+    local pos = vim.api.nvim_win_get_cursor(0)[2]
+    local line = vim.api.nvim_get_current_line()
+    local nline = line:sub(0, pos) .. text .. line:sub(pos + 1)
+    vim.api.nvim_set_current_line(nline)
+    local text_length = #text
+    vim.api.nvim_win_set_cursor(0, {row_num, pos+text_length})
+end
+
+local function insert_model_ref()
+    local model_names = get_model_names()
+
+    vim.ui.select(model_names, {prompt = "DBT MODELS"},
+        function(model_name)
+            local text = "{{ ref('" .. model_name .. "') }}"
+            insert_text_at_current_position(text)
+            vim.api.nvim_command("normal! a")
+        end
+        )
+end
+
 local function get_current_model_name()
     local file_name = vim.api.nvim_eval('expand("%:t")')
     local table_name = vim.split(file_name, ".", true)[1]
@@ -117,10 +140,7 @@ local function yank_current_model_name_to_clipboard(options)
 end
 
 local function test_harness()
-    put(yank_current_model_name_to_clipboard({
-        lowercase=true,
-        prefix="cmeyers_"
-    }))
+    put(insert_model_ref())
 end
 
 M.test_harness = test_harness
@@ -129,5 +149,6 @@ M.telescope_jump_to_model_file = telescope_jump_to_model_file
 M.get_model_names = get_model_names
 M.get_current_model_name = get_current_model_name
 M.yank_current_model_name_to_clipboard = yank_current_model_name_to_clipboard
+M.insert_model_ref = insert_model_ref
 
 return M

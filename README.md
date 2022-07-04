@@ -1,11 +1,12 @@
 # dbt.nvim
 
 A neovim plugin for [dbt](https://www.getdbt.com/).  Still  very much work-in-progress.
-Requires [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim), [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) and Neovim +5.0.
+Requires [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim), [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim), [nvim-notify](https://github.com/rcarriga/nvim-notify) and Neovim +5.0.
 
 ## Features
 - [X] jump to model file from `{{ ref() }}`
-- [X] select model file to jump to from Telescope fuzzy finder
+- [X] select model file to jump to from Telescope fuzzy finder (`DBTGoToDefinition`)
+- [X] insert model ref from fuzzy finder  (`DBTInsertModelRef`)
 - [ ] jump to model properties in `.yml` file
     - [ ] use treesitter to parse model names and line numbers from `.yaml` file
     - [ ] crawl all .yml files looking for model name
@@ -13,7 +14,7 @@ Requires [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim), [tel
     - [ ] use treesitter to parse source table names and line numbers from `.yaml` file
     - [ ] crawl all .yml files looking for source table name
     - [ ] update `DBTGoToDefinition` to jump to source `.yml` if `{{ source() }}` specified
-- [ ] insert model ref from Telescope fuzzy finder
+    - [ ] look at https://github.com/cuducos/yaml.nvim
 - [ ] view model columns and definitions in floating window
 - [ ] view source columns and definitions in floating window
 - [ ] run model from model file
@@ -31,6 +32,7 @@ return require("packer").startup(
             requires = {
                 "nvim-lua/plenary.nvim",
                 "nvim-telescope/telescope.nvim",
+                "rcarriga/nvim-notify",
             },
         }
     end
@@ -45,6 +47,7 @@ Suggested remap in `nvim/after/ftplugin/sql`:
 
 ```vim
 nnoremap <buffer> gd :DBTGoToDefinition<CR>
+inoremap <buffer> rrr <C-O>:DBTInsertModelRef<CR>
 ```
 
 ### `DBTTelescopeJumpToModelFile`
