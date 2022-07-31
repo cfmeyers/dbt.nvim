@@ -50,7 +50,14 @@ local function get_model_names(full_path)
     return t
 end
 
-M.get_yaml_version = get_yaml_version
+local function get_name_from_line(line)
+    _, _, model_name = string.find(line, "name:%s([%w_]+)")
+    return model_name
+end
+
+-- M.get_yaml_version = get_yaml_version
 M.get_model_names = get_model_names
+M.get_name_from_line = get_name_from_line
 
 return M
+

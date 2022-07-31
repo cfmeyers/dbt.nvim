@@ -5,6 +5,7 @@ Requires [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim), [tel
 
 ## Features
 - [X] jump to model file from `{{ ref() }}`
+- [X] jump to model file from definition in yaml schema file
 - [X] select model file to jump to from Telescope fuzzy finder (`DBTGoToDefinition`)
 - [X] insert model ref from fuzzy finder  (`DBTInsertModelRef`)
 - [ ] jump to model properties in `.yml` file

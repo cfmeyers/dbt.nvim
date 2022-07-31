@@ -31,21 +31,36 @@ local function get_model_path(model_name)
     return all_paths[1]
 end
 
-local function jump_to_model(model_name)
+local function jump_to_model(model_name, buffer_edit_mode)
     model_path = get_model_path(model_name)
     if model_path then
-        vim.api.nvim_command("edit " .. model_path)
+        vim.api.nvim_command(buffer_edit_mode .. " " .. model_path)
     else
         print("Could not find file for model '" .. model_name .. "'")
     end
 end
 
-local function go_to_definition()
+
+local function in_yaml_file()
+    return vim.bo.filetype == 'yaml'
+end
+
+local function in_sql_file()
+    return vim.bo.filetype == 'sql'
+end
+
+
+
+local function go_to_definition(buffer_edit_mode)
     line = vim.api.nvim_get_current_line()
-    ref_model_name = Jinja.get_ref(line)
+    if in_yaml_file() then
+        ref_model_name = Yaml.get_name_from_line(line)
+    else
+        ref_model_name = Jinja.get_ref(line)
+    end
     source_name, table_name = Jinja.get_source(line)
     if ref_model_name then
-        jump_to_model(ref_model_name)
+        jump_to_model(ref_model_name, buffer_edit_mode)
     elseif source_name then
         print(source_name .. "." .. table_name)
     end
