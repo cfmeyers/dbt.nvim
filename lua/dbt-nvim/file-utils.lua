@@ -122,7 +122,7 @@ local function insert_model_ref()
         )
 end
 
-local function get_current_model_name()
+local function get_current_model_name(include_schema)
     local file_name = vim.api.nvim_eval('expand("%:t")')
     local table_name = vim.split(file_name, ".", true)[1]
     local schema_name = ""
@@ -134,7 +134,7 @@ local function get_current_model_name()
         end
     end
     local full_name = ""
-    if schema_name ~= "" then
+    if schema_name ~= "" and include_schema then
         full_name = schema_name .. "." .. table_name
     else
         full_name = table_name
@@ -143,7 +143,14 @@ local function get_current_model_name()
 end
 
 local function yank_current_model_name_to_clipboard(options)
-    local full_name = get_current_model_name()
+    local full_name = ""
+
+    if options["include_schema"] == false then
+        full_name = get_current_model_name(false)
+    else
+        full_name = get_current_model_name(true)
+    end
+
     if options["lowercase"] then
         full_name = string.lower(full_name)
     end
