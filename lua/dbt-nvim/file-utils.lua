@@ -172,5 +172,6 @@ M.get_model_names = get_model_names
 M.get_current_model_name = get_current_model_name
 M.yank_current_model_name_to_clipboard = yank_current_model_name_to_clipboard
 M.insert_model_ref = insert_model_ref
+M.get_dbt_root_dir = get_dbt_root_dir
 
 return M
